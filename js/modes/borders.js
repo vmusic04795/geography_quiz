@@ -1,6 +1,6 @@
 /* ═══════════════════════════════ BORDERS MODE ════════════════════════════ */
 const BordersMode = (() => {
-  let settings = { regions: ['Africa','Americas','Asia','Europe','Oceania'] };
+  let settings = { regions: ['Africa','Americas','Asia','Europe','Oceania'], maxRounds: 5 };
   let current = null;   // { code, data }
   let found   = new Set();
   let score   = 0;
@@ -9,6 +9,7 @@ const BordersMode = (() => {
   function readSettings() {
     settings.regions = Array.from(document.querySelectorAll('input[name="borders-region"]:checked')).map(e => e.value);
     if (!settings.regions.length) settings.regions = ['Africa','Americas','Asia','Europe','Oceania'];
+    settings.maxRounds = parseInt(document.getElementById('borders-rounds-slider')?.value ?? '5', 10);
   }
 
   function flagUrl(iso2) {
@@ -46,6 +47,13 @@ const BordersMode = (() => {
     document.getElementById('borders-input').focus();
     document.getElementById('borders-autocomplete').innerHTML = '';
     document.getElementById('borders-autocomplete').classList.remove('open');
+
+    document.getElementById('borders-round').textContent = round;
+    document.getElementById('borders-round-total').textContent = settings.maxRounds;
+
+    document.getElementById('borders-end').style.display = 'none';
+    document.getElementById('borders-question-card').style.display = '';
+    document.querySelectorAll('#screen-borders .input-row, #screen-borders .found-list-wrap').forEach(el => el.style.display = '');
   }
 
   function start() {
@@ -63,14 +71,17 @@ const BordersMode = (() => {
     const code = findCountryByName(trimmed);
     if (!code) {
       showToast('Country not found — check spelling', 'error');
+      document.getElementById('borders-input').value = '';
       return;
     }
     if (found.has(code)) {
       showToast('Already found!');
+      document.getElementById('borders-input').value = '';
       return;
     }
     if (!current.data.borders.includes(code)) {
       showToast(`${COUNTRIES[code].name} does not border ${current.data.name}`, 'error');
+      document.getElementById('borders-input').value = '';
       return;
     }
 
@@ -113,7 +124,16 @@ const BordersMode = (() => {
 
   function nextRound() {
     round++;
+    if (round > settings.maxRounds) { endGame(); return; }
     newRound();
+  }
+
+  function endGame() {
+    saveHighScore('borders', score);
+    document.getElementById('borders-final-score').textContent = score;
+    document.getElementById('borders-question-card').style.display = 'none';
+    document.querySelectorAll('#screen-borders .input-row, #screen-borders .found-list-wrap, #borders-reveal').forEach(el => el.style.display = 'none');
+    document.getElementById('borders-end').style.display = '';
   }
 
   // ── Autocomplete ──────────────────────────────────────────────────────────
@@ -140,6 +160,11 @@ const BordersMode = (() => {
 
   // ── DOM wiring ────────────────────────────────────────────────────────────
   function init() {
+    const slider = document.getElementById('borders-rounds-slider');
+    if (slider) slider.addEventListener('input', () => {
+      document.getElementById('borders-rounds-display').textContent = slider.value;
+    });
+
     const input = document.getElementById('borders-input');
     input.addEventListener('input', e => handleInput(e.target.value));
     input.addEventListener('keydown', e => {
@@ -153,6 +178,8 @@ const BordersMode = (() => {
 
     document.getElementById('borders-give-up').addEventListener('click', giveUp);
     document.getElementById('borders-next').addEventListener('click', nextRound);
+    document.getElementById('borders-play-again').addEventListener('click', () => start());
+    document.getElementById('borders-change-settings').addEventListener('click', () => Game.showScreen('screen-borders-setup'));
   }
 
   return { init, start };

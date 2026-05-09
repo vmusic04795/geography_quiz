@@ -233,6 +233,11 @@
         <label class="check-option"><input type="checkbox" name="borders-region" value="Oceania" checked> <span>Oceania</span></label>
       </div>
     </div>
+    <div class="setup-section">
+      <h3>Rounds <span class="slider-value-display" id="borders-rounds-display">5</span></h3>
+      <input type="range" id="borders-rounds-slider" min="1" max="20" value="5" class="rounds-slider">
+      <div class="slider-labels"><span>1</span><span>20</span></div>
+    </div>
     <button class="btn-primary btn-large" id="borders-start-btn">Start Borders 🗺️</button>
   </div>
 </section>
@@ -243,7 +248,7 @@
     <button class="btn-back" id="borders-back">← Back</button>
     <div class="game-stats">
       <span class="stat-pill" id="borders-score-pill">Score: <b id="borders-score">0</b></span>
-      <span class="stat-pill" id="borders-round-pill">Round <b id="borders-round">1</b></span>
+      <span class="stat-pill" id="borders-round-pill">Round <b id="borders-round">1</b>/<b id="borders-round-total">5</b></span>
     </div>
   </div>
 
@@ -274,6 +279,18 @@
       <h3>Missed:</h3>
       <div class="missed-chips" id="borders-missed-chips"></div>
       <button class="btn-primary" id="borders-next">Next Country →</button>
+    </div>
+
+    <div class="game-end" id="borders-end" style="display:none">
+      <h2>All Rounds Done!</h2>
+      <div class="final-score-display">
+        <span class="final-score-label">Final Score</span>
+        <span class="final-score-value" id="borders-final-score">0</span>
+      </div>
+      <div class="end-buttons">
+        <button class="btn-primary" id="borders-play-again">Play Again</button>
+        <button class="btn-secondary" id="borders-change-settings">Change Settings</button>
+      </div>
     </div>
   </div>
 </section>
@@ -311,6 +328,11 @@
         </label>
       </div>
     </div>
+    <div class="setup-section">
+      <h3>Journeys <span class="slider-value-display" id="pathfinder-rounds-display">5</span></h3>
+      <input type="range" id="pathfinder-rounds-slider" min="1" max="20" value="5" class="rounds-slider">
+      <div class="slider-labels"><span>1</span><span>20</span></div>
+    </div>
     <button class="btn-primary btn-large" id="pathfinder-start-btn">Start Pathfinder ✈️</button>
   </div>
 </section>
@@ -321,6 +343,7 @@
     <button class="btn-back" id="pathfinder-back">← Back</button>
     <div class="game-stats">
       <span class="stat-pill">Score: <b id="pathfinder-score">0</b></span>
+      <span class="stat-pill">Journey <b id="pathfinder-journey">1</b>/<b id="pathfinder-journey-total">5</b></span>
       <span class="stat-pill">Moves: <b id="pathfinder-moves">0</b></span>
       <span class="stat-pill">Best: <b id="pathfinder-best">?</b></span>
     </div>
@@ -362,6 +385,18 @@
       <p id="pathfinder-success-msg"></p>
       <div class="path-trail" id="path-trail-final"></div>
       <button class="btn-primary" id="pathfinder-next">New Journey →</button>
+    </div>
+
+    <div class="game-end" id="pathfinder-end" style="display:none">
+      <h2>All Journeys Complete!</h2>
+      <div class="final-score-display">
+        <span class="final-score-label">Final Score</span>
+        <span class="final-score-value" id="pathfinder-final-score">0</span>
+      </div>
+      <div class="end-buttons">
+        <button class="btn-primary" id="pathfinder-play-again">Play Again</button>
+        <button class="btn-secondary" id="pathfinder-change-settings">Change Settings</button>
+      </div>
     </div>
   </div>
 </section>

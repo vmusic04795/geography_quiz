@@ -6,13 +6,15 @@ const PathfinderMode = (() => {
     challenge: [5, 10],
   };
 
-  let settings = { difficulty: 'normal' };
+  let settings = { difficulty: 'normal', maxRounds: 5 };
   let game = null;
   let score = 0;
   let hintsUsed = 0;
+  let journeysDone = 0;
 
   function readSettings() {
     settings.difficulty = document.querySelector('input[name="pathfinder-difficulty"]:checked')?.value ?? 'normal';
+    settings.maxRounds = parseInt(document.getElementById('pathfinder-rounds-slider')?.value ?? '5', 10);
   }
 
   function flagUrl(iso2) { return `https://flagcdn.com/w160/${iso2}.png`; }
@@ -38,10 +40,13 @@ const PathfinderMode = (() => {
     document.getElementById('path-end').textContent         = COUNTRIES[game.end].name;
     document.getElementById('path-start-flag').src          = flagUrl(COUNTRIES[game.start].iso2);
     document.getElementById('path-end-flag').src            = flagUrl(COUNTRIES[game.end].iso2);
-    document.getElementById('pathfinder-score').textContent = score;
-    document.getElementById('pathfinder-moves').textContent = 0;
-    document.getElementById('pathfinder-best').textContent  = game.optimalHops;
+    document.getElementById('pathfinder-score').textContent         = score;
+    document.getElementById('pathfinder-moves').textContent         = 0;
+    document.getElementById('pathfinder-best').textContent          = game.optimalHops;
+    document.getElementById('pathfinder-journey').textContent       = journeysDone + 1;
+    document.getElementById('pathfinder-journey-total').textContent = settings.maxRounds;
 
+    document.getElementById('pathfinder-end').style.display     = 'none';
     document.getElementById('pathfinder-success').style.display = 'none';
     document.getElementById('pathfinder-hint-reveal').style.display = 'none';
     document.getElementById('pathfinder-input').value = '';
@@ -54,6 +59,7 @@ const PathfinderMode = (() => {
   function start() {
     readSettings();
     score = 0;
+    journeysDone = 0;
     newJourney();
   }
 
@@ -90,16 +96,19 @@ const PathfinderMode = (() => {
     const trimmed = input.trim();
     if (!trimmed) return;
 
+    const inp = document.getElementById('pathfinder-input');
     const code = findCountryByName(trimmed);
-    if (!code) { showToast('Country not found — check spelling', 'error'); return; }
+    if (!code) { showToast('Country not found — check spelling', 'error'); inp.value = ''; return; }
 
     const neighbors = getNeighbors(game.current);
     if (!neighbors.includes(code)) {
       showToast(`${COUNTRIES[code].name} does not border ${COUNTRIES[game.current].name}`, 'error');
+      inp.value = '';
       return;
     }
     if (game.path.includes(code) && code !== game.end) {
       showToast("You've already been there — find a new route", 'error');
+      inp.value = '';
       return;
     }
 
@@ -139,7 +148,18 @@ const PathfinderMode = (() => {
     document.getElementById('pathfinder-success-msg').textContent = msg;
     document.getElementById('pathfinder-success').style.display = '';
 
+    journeysDone++;
     saveHighScore('pathfinder', score);
+
+    if (journeysDone >= settings.maxRounds) {
+      setTimeout(endGame, 1800);
+    }
+  }
+
+  function endGame() {
+    document.getElementById('pathfinder-success').style.display = 'none';
+    document.getElementById('pathfinder-final-score').textContent = score;
+    document.getElementById('pathfinder-end').style.display = '';
   }
 
   // ── Hint ──────────────────────────────────────────────────────────────────
@@ -201,7 +221,17 @@ const PathfinderMode = (() => {
     input.addEventListener('blur', () => setTimeout(() => closeAutocomplete('pathfinder-autocomplete'), 150));
 
     document.getElementById('pathfinder-hint-btn').addEventListener('click', showHint);
-    document.getElementById('pathfinder-next').addEventListener('click', newJourney);
+    document.getElementById('pathfinder-next').addEventListener('click', () => {
+      if (journeysDone >= settings.maxRounds) { endGame(); return; }
+      newJourney();
+    });
+    document.getElementById('pathfinder-play-again').addEventListener('click', () => start());
+    document.getElementById('pathfinder-change-settings').addEventListener('click', () => Game.showScreen('screen-pathfinder-setup'));
+
+    const slider = document.getElementById('pathfinder-rounds-slider');
+    if (slider) slider.addEventListener('input', () => {
+      document.getElementById('pathfinder-rounds-display').textContent = slider.value;
+    });
   }
 
   return { init, start };
