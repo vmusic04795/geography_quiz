@@ -98,17 +98,19 @@ const PathfinderMode = (() => {
 
     const inp = document.getElementById('pathfinder-input');
     const code = findCountryByName(trimmed);
-    if (!code) { showToast('Country not found — check spelling', 'error'); inp.value = ''; return; }
+    if (!code) { showToast('Country not found — check spelling', 'error'); inp.value = ''; closeAutocomplete('pathfinder-autocomplete'); return; }
 
     const neighbors = getNeighbors(game.current);
     if (!neighbors.includes(code)) {
       showToast(`${COUNTRIES[code].name} does not border ${COUNTRIES[game.current].name}`, 'error');
       inp.value = '';
+      closeAutocomplete('pathfinder-autocomplete');
       return;
     }
     if (game.path.includes(code) && code !== game.end) {
       showToast("You've already been there — find a new route", 'error');
       inp.value = '';
+      closeAutocomplete('pathfinder-autocomplete');
       return;
     }
 
@@ -176,20 +178,10 @@ const PathfinderMode = (() => {
 
   // ── Autocomplete ──────────────────────────────────────────────────────────
   function handleInput(val) {
-    // Filter to neighbors only for pathfinder
-    const neighbors = getNeighbors(game?.current ?? '');
-    const neighborNames = neighbors.map(c => ({ code: c, name: COUNTRIES[c]?.name ?? c }));
-
-    const clean = val.trim().toLowerCase();
-    const suggestions = clean
-      ? neighborNames.filter(n => n.name.toLowerCase().startsWith(clean))
-          .concat(neighborNames.filter(n => !n.name.toLowerCase().startsWith(clean) && n.name.toLowerCase().includes(clean)))
-          .slice(0, 6)
-      : [];
-
+    const suggestions = autocomplete(val, 6);
     const list = document.getElementById('pathfinder-autocomplete');
     list.innerHTML = '';
-    if (!suggestions.length || !clean) { list.classList.remove('open'); return; }
+    if (!suggestions.length || !val.trim()) { list.classList.remove('open'); return; }
 
     suggestions.forEach(s => {
       const item = document.createElement('div');

@@ -72,16 +72,19 @@ const BordersMode = (() => {
     if (!code) {
       showToast('Country not found — check spelling', 'error');
       document.getElementById('borders-input').value = '';
+      closeAutocomplete('borders-autocomplete');
       return;
     }
     if (found.has(code)) {
       showToast('Already found!');
       document.getElementById('borders-input').value = '';
+      closeAutocomplete('borders-autocomplete');
       return;
     }
     if (!current.data.borders.includes(code)) {
       showToast(`${COUNTRIES[code].name} does not border ${current.data.name}`, 'error');
       document.getElementById('borders-input').value = '';
+      closeAutocomplete('borders-autocomplete');
       return;
     }
 
