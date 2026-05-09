@@ -49,7 +49,7 @@ const ShapeRenderer = (() => {
   // ── Data loading ──────────────────────────────────────────────────────────
   function load() {
     if (loadPromise) return loadPromise;
-    loadPromise = fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    loadPromise = fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
       .then(r => { if (!r.ok) throw new Error('fetch failed'); return r.json(); })
       .then(data => { worldData = data; return data; })
       .catch(err => { loadPromise = null; throw err; });
