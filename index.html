@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GeoQuiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ HEADER -->
+<header id="app-header">
+  <div class="header-inner">
+    <div class="logo" id="btn-home">
+      <span class="logo-geo">Geo</span><span class="logo-quiz">Quiz</span>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn" id="btn-theme-panel" title="Themes">🎨 Theme</button>
+      <button class="nav-btn" id="btn-flag-designer" title="Flag Designer">🚩 My Flag</button>
+      <button class="nav-btn" id="btn-scores" title="Scores">🏆 Scores</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════ SCREENS -->
+
+<!-- ── HOME ──────────────────────────────────────────────────────────────── -->
+<section class="screen active" id="screen-home">
+  <div class="home-hero">
+    <h1>Test Your <span class="accent">World Knowledge</span></h1>
+    <p class="hero-sub">Four ways to play. One planet to master.</p>
+  </div>
+
+  <!-- Active theme country banner -->
+  <div class="theme-active-banner" id="theme-active-banner" style="display:none">
+    <img id="theme-banner-flag" src="" alt="" class="banner-flag">
+    <span class="banner-text">Theme: <strong id="theme-banner-name">—</strong></span>
+  </div>
+
+  <div class="mode-grid">
+
+    <div class="mode-card featured" data-mode="classic">
+      <div class="mode-badge">Main</div>
+      <div class="mode-icon">🌍</div>
+      <h2>Classic</h2>
+      <p>Choose what you're shown — flag, shape, name, capital — and what you must answer. Fully yours to configure.</p>
+      <div class="mode-meta">
+        <span class="tag">Capitals</span>
+        <span class="tag">Flags</span>
+        <span class="tag">Shapes</span>
+      </div>
+      <button class="btn-primary" data-mode="classic">Play</button>
+    </div>
+
+    <div class="mode-card" data-mode="borders">
+      <div class="mode-icon">🗺️</div>
+      <h2>Borders</h2>
+      <p>Name every country that shares a border with the given nation.</p>
+      <div class="mode-meta">
+        <span class="tag">Memory</span>
+        <span class="tag">Geography</span>
+      </div>
+      <button class="btn-primary" data-mode="borders">Play</button>
+    </div>
+
+    <div class="mode-card" data-mode="pathfinder">
+      <div class="mode-icon">✈️</div>
+      <h2>Pathfinder</h2>
+      <p>Travel between two countries by crossing borders one step at a time.</p>
+      <div class="mode-meta">
+        <span class="tag">Strategy</span>
+        <span class="tag">Routing</span>
+      </div>
+      <button class="btn-primary" data-mode="pathfinder">Play</button>
+    </div>
+
+    <div class="mode-card" data-mode="gauntlet">
+      <div class="mode-badge">All-In</div>
+      <div class="mode-icon">⚡</div>
+      <h2>Gauntlet</h2>
+      <p>Capitals, flags, country names, shapes — rapid-fire, all at once.</p>
+      <div class="mode-meta">
+        <span class="tag">Hard</span>
+        <span class="tag">Custom</span>
+      </div>
+      <button class="btn-primary" data-mode="gauntlet">Play</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CLASSIC SETUP ──────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-classic-setup">
+  <div class="game-header">
+    <button class="btn-back" id="classic-setup-back">← Back</button>
+    <h2 class="screen-title">Classic Quiz Setup</h2>
+  </div>
+  <div class="setup-body">
+
+    <div class="setup-section">
+      <h3>You Will Be Shown</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="classic-given" value="name" checked> <span>Country Name</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-given" value="capital"> <span>Capital City</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-given" value="flag" checked> <span>Flag</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-given" value="shape"> <span>Shape</span></label>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>You Must Answer With</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="classic-asked" value="name" checked> <span>Country Name</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-asked" value="capital" checked> <span>Capital City</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-asked" value="flag"> <span>Flag (pick the flag)</span></label>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Answer Style</h3>
+      <div class="radio-group">
+        <label class="radio-option selected" data-value="multiple-choice">
+          <input type="radio" name="classic-style" value="multiple-choice" checked>
+          <div class="radio-content">
+            <span class="radio-title">Multiple Choice</span>
+            <span class="radio-desc">4 options — faster, more casual</span>
+          </div>
+        </label>
+        <label class="radio-option" data-value="type-in">
+          <input type="radio" name="classic-style" value="type-in">
+          <div class="radio-content">
+            <span class="radio-title">Type It In</span>
+            <span class="radio-desc">Spell it out — much harder</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Question Count</h3>
+      <div class="slider-row">
+        <input type="range" id="classic-q-count" min="5" max="50" step="5" value="20">
+        <span id="classic-q-count-label">20 questions</span>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Region Filter</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="classic-region" value="Africa" checked> <span>Africa</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-region" value="Americas" checked> <span>Americas</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-region" value="Asia" checked> <span>Asia</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-region" value="Europe" checked> <span>Europe</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-region" value="Oceania" checked> <span>Oceania</span></label>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-large" id="classic-start-btn">Start Quiz 🌍</button>
+  </div>
+</section>
+
+<!-- ── CLASSIC GAME ───────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-classic">
+  <div class="game-header">
+    <button class="btn-back" id="classic-back">← Back</button>
+    <div class="game-stats">
+      <span class="stat-pill">Score: <b id="classic-score">0</b></span>
+      <span class="stat-pill">Streak: <b id="classic-streak">0</b>🔥</span>
+      <span class="stat-pill">Q: <b id="classic-q-num">0</b>/<b id="classic-q-total">20</b></span>
+    </div>
+  </div>
+  <div class="game-area gauntlet-area">
+    <div class="progress-bar-wrap"><div class="progress-bar" id="classic-progress"></div></div>
+
+    <div class="gauntlet-card" id="classic-card">
+      <div class="q-type-badge" id="classic-q-badge">Flag → Country</div>
+      <div class="classic-given-area" id="classic-given-area"></div>
+      <p class="gauntlet-prompt" id="classic-prompt">Loading…</p>
+      <div id="classic-choices" class="gauntlet-choices"></div>
+      <div class="gauntlet-type-row" id="classic-type-row" style="display:none">
+        <div class="autocomplete-wrap">
+          <input type="text" id="classic-input" class="answer-input" placeholder="Your answer…" autocomplete="off">
+          <div class="autocomplete-list" id="classic-autocomplete"></div>
+        </div>
+        <button class="btn-primary" id="classic-submit">Submit</button>
+      </div>
+      <div class="gauntlet-feedback" id="classic-feedback" style="display:none"></div>
+    </div>
+
+    <div class="gauntlet-end" id="classic-end" style="display:none">
+      <h2>Quiz Complete!</h2>
+      <div class="final-score-display">
+        <span class="final-score-num" id="classic-final-score">0</span>
+        <span class="final-score-label">points</span>
+      </div>
+      <p id="classic-final-msg"></p>
+      <div class="end-buttons">
+        <button class="btn-primary" id="classic-play-again">Play Again</button>
+        <button class="btn-secondary" id="classic-change-settings">Change Settings</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BORDERS MODE ───────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-borders">
+  <div class="game-header">
+    <button class="btn-back" id="borders-back">← Back</button>
+    <div class="game-stats">
+      <span class="stat-pill" id="borders-score-pill">Score: <b id="borders-score">0</b></span>
+      <span class="stat-pill" id="borders-round-pill">Round <b id="borders-round">1</b></span>
+    </div>
+  </div>
+
+  <div class="game-area">
+    <div class="question-card" id="borders-question-card">
+      <p class="question-label">Name all countries that border</p>
+      <h2 class="country-name" id="borders-country-name">—</h2>
+      <div class="country-flag-wrap">
+        <img class="country-flag" id="borders-flag" src="" alt="" onerror="this.style.display='none'">
+      </div>
+      <div class="border-count-hint" id="borders-hint"></div>
+    </div>
+
+    <div class="input-row">
+      <div class="autocomplete-wrap">
+        <input type="text" id="borders-input" class="answer-input" placeholder="Type a country name…" autocomplete="off">
+        <div class="autocomplete-list" id="borders-autocomplete"></div>
+      </div>
+      <button class="btn-secondary" id="borders-give-up">Give Up</button>
+    </div>
+
+    <div class="found-list-wrap">
+      <h3 class="found-title">Found <span id="borders-found-count">0</span> / <span id="borders-total-count">?</span></h3>
+      <div class="found-chips" id="borders-found-chips"></div>
+    </div>
+
+    <div class="borders-reveal" id="borders-reveal" style="display:none">
+      <h3>Missed:</h3>
+      <div class="missed-chips" id="borders-missed-chips"></div>
+      <button class="btn-primary" id="borders-next">Next Country →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── PATHFINDER MODE ───────────────────────────────────────────────────── -->
+<section class="screen" id="screen-pathfinder">
+  <div class="game-header">
+    <button class="btn-back" id="pathfinder-back">← Back</button>
+    <div class="game-stats">
+      <span class="stat-pill">Score: <b id="pathfinder-score">0</b></span>
+      <span class="stat-pill">Moves: <b id="pathfinder-moves">0</b></span>
+      <span class="stat-pill">Best: <b id="pathfinder-best">?</b></span>
+    </div>
+  </div>
+
+  <div class="game-area">
+    <div class="pathfinder-header-card">
+      <div class="path-endpoint start">
+        <span class="endpoint-label">FROM</span>
+        <span class="endpoint-name" id="path-start">—</span>
+        <img class="endpoint-flag" id="path-start-flag" src="" alt="">
+      </div>
+      <div class="path-arrow">→</div>
+      <div class="path-endpoint end">
+        <span class="endpoint-label">TO</span>
+        <span class="endpoint-name" id="path-end">—</span>
+        <img class="endpoint-flag" id="path-end-flag" src="" alt="">
+      </div>
+    </div>
+
+    <div class="path-trail" id="path-trail"></div>
+
+    <div class="pathfinder-prompt" id="pathfinder-prompt">
+      <p>You are in <strong id="path-current-label">—</strong>. Which neighboring country do you want to enter?</p>
+    </div>
+
+    <div class="input-row">
+      <div class="autocomplete-wrap">
+        <input type="text" id="pathfinder-input" class="answer-input" placeholder="Type a neighboring country…" autocomplete="off">
+        <div class="autocomplete-list" id="pathfinder-autocomplete"></div>
+      </div>
+      <button class="btn-secondary" id="pathfinder-hint-btn">💡 Hint</button>
+    </div>
+
+    <div class="pathfinder-hint-reveal" id="pathfinder-hint-reveal" style="display:none"></div>
+
+    <div class="pathfinder-success" id="pathfinder-success" style="display:none">
+      <h2>🎉 You made it!</h2>
+      <p id="pathfinder-success-msg"></p>
+      <div class="path-trail" id="path-trail-final"></div>
+      <button class="btn-primary" id="pathfinder-next">New Journey →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── GAUNTLET MODE ─────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-gauntlet">
+  <div class="game-header">
+    <button class="btn-back" id="gauntlet-back">← Back</button>
+    <div class="game-stats">
+      <span class="stat-pill">Score: <b id="gauntlet-score">0</b></span>
+      <span class="stat-pill">Streak: <b id="gauntlet-streak">0</b>🔥</span>
+      <span class="stat-pill">Q: <b id="gauntlet-q-num">0</b>/<b id="gauntlet-q-total">20</b></span>
+    </div>
+  </div>
+
+  <div class="game-area gauntlet-area">
+    <div class="progress-bar-wrap"><div class="progress-bar" id="gauntlet-progress"></div></div>
+
+    <div class="gauntlet-card" id="gauntlet-card">
+      <div class="q-type-badge" id="gauntlet-q-type">Capital</div>
+      <div class="gauntlet-media" id="gauntlet-media"></div>
+      <p class="gauntlet-prompt" id="gauntlet-prompt">Loading…</p>
+
+      <div class="gauntlet-choices" id="gauntlet-choices"></div>
+
+      <div class="gauntlet-type-row" id="gauntlet-type-row" style="display:none">
+        <div class="autocomplete-wrap">
+          <input type="text" id="gauntlet-input" class="answer-input" placeholder="Your answer…" autocomplete="off">
+          <div class="autocomplete-list" id="gauntlet-autocomplete"></div>
+        </div>
+        <button class="btn-primary" id="gauntlet-submit">Submit</button>
+      </div>
+
+      <div class="gauntlet-feedback" id="gauntlet-feedback" style="display:none"></div>
+    </div>
+
+    <div class="gauntlet-end" id="gauntlet-end" style="display:none">
+      <div class="hard-mode-trophy" id="hard-mode-trophy" style="display:none">
+        <div class="trophy-emoji">🏆</div>
+        <div class="trophy-title">Gauntlet Conquered</div>
+        <div class="trophy-sub">You survived every country on Earth.</div>
+      </div>
+      <h2 id="gauntlet-end-title">Gauntlet Complete!</h2>
+      <div class="final-score-display">
+        <span class="final-score-num" id="gauntlet-final-score">0</span>
+        <span class="final-score-label">points</span>
+      </div>
+      <p id="gauntlet-final-msg"></p>
+      <div class="end-buttons">
+        <button class="btn-primary" id="gauntlet-play-again">Play Again</button>
+        <button class="btn-secondary" id="gauntlet-change-settings">Change Settings</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GAUNTLET SETUP ─────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-gauntlet-setup">
+  <div class="game-header">
+    <button class="btn-back" id="gauntlet-setup-back">← Back</button>
+    <h2 class="screen-title">Gauntlet Setup</h2>
+  </div>
+  <div class="setup-body">
+
+    <!-- ── Ominous Hard Mode challenge ──────────────────────────────────── -->
+    <div class="hard-mode-challenge" id="hard-mode-challenge-card">
+      <div class="hm-icon">💀</div>
+      <div class="hm-text">
+        <div class="hm-title">The Real Gauntlet</div>
+        <div class="hm-desc">Every country. Every type. No mercy. Can you finish?</div>
+      </div>
+      <button class="btn-hard-mode" id="hard-mode-btn">Enter</button>
+    </div>
+
+    <!-- ── Ultimate Gauntlet (unlocked after Hard Mode) ────────────────── -->
+    <div class="ultimate-challenge" id="ultimate-challenge-card">
+      <div class="hm-icon" id="ultimate-icon">🔒</div>
+      <div class="hm-text">
+        <div class="ultimate-title" id="ultimate-title">Ultimate Gauntlet</div>
+        <div class="hm-desc" id="ultimate-desc">Complete The Real Gauntlet to unlock.</div>
+      </div>
+      <button class="btn-ultimate" id="ultimate-gauntlet-btn" disabled>Locked</button>
+    </div>
+
+    <div class="setup-divider">— or configure below —</div>
+
+    <div class="setup-section">
+      <h3>Mode</h3>
+      <div class="radio-group">
+        <label class="radio-option selected" data-value="hard">
+          <input type="radio" name="gauntlet-mode" value="hard" checked>
+          <div class="radio-content">
+            <span class="radio-title">Hard Mode</span>
+            <span class="radio-desc">All question types, including oceans &amp; seas</span>
+          </div>
+        </label>
+        <label class="radio-option" data-value="custom">
+          <input type="radio" name="gauntlet-mode" value="custom">
+          <div class="radio-content">
+            <span class="radio-title">Custom</span>
+            <span class="radio-desc">Pick which question types to include</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="setup-section custom-options" id="gauntlet-custom-options" style="display:none">
+      <h3>Question Types</h3>
+      <div class="checkbox-group">
+        <label class="check-option"><input type="checkbox" name="q-type" value="capital" checked> <span>Country → Capital</span></label>
+        <label class="check-option"><input type="checkbox" name="q-type" value="country-from-capital" checked> <span>Capital → Country</span></label>
+        <label class="check-option"><input type="checkbox" name="q-type" value="flag" checked> <span>Flag → Country</span></label>
+        <label class="check-option"><input type="checkbox" name="q-type" value="shape" checked> <span>Shape → Country</span></label>
+        <label class="check-option"><input type="checkbox" name="q-type" value="ocean"> <span>Country → Ocean/Sea</span></label>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Question Count</h3>
+      <div class="slider-row">
+        <input type="range" id="gauntlet-q-count" min="5" max="100" step="5" value="20">
+        <span id="gauntlet-q-count-label">20 questions</span>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Answer Style</h3>
+      <div class="radio-group">
+        <label class="radio-option selected" data-value="multiple-choice">
+          <input type="radio" name="answer-style" value="multiple-choice" checked>
+          <div class="radio-content">
+            <span class="radio-title">Multiple Choice</span>
+            <span class="radio-desc">4 options — faster, casual</span>
+          </div>
+        </label>
+        <label class="radio-option" data-value="type-in">
+          <input type="radio" name="answer-style" value="type-in">
+          <div class="radio-content">
+            <span class="radio-title">Type It In</span>
+            <span class="radio-desc">Full answer required — harder</span>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <div class="setup-section">
+      <h3>Region Filter</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="region" value="Africa" checked> <span>Africa</span></label>
+        <label class="check-option"><input type="checkbox" name="region" value="Americas" checked> <span>Americas</span></label>
+        <label class="check-option"><input type="checkbox" name="region" value="Asia" checked> <span>Asia</span></label>
+        <label class="check-option"><input type="checkbox" name="region" value="Europe" checked> <span>Europe</span></label>
+        <label class="check-option"><input type="checkbox" name="region" value="Oceania" checked> <span>Oceania</span></label>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-large" id="gauntlet-start-btn">Start Gauntlet ⚡</button>
+  </div>
+</section>
+
+<!-- ── THEME PANEL ───────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-theme">
+  <div class="game-header">
+    <button class="btn-back" id="theme-back">← Back</button>
+    <h2 class="screen-title">Themes</h2>
+  </div>
+
+  <!-- Country search dropdown -->
+  <div class="theme-country-picker">
+    <label class="picker-label" for="theme-country-select">Browse any country's colors:</label>
+    <div class="picker-row">
+      <select id="theme-country-select" class="country-select">
+        <option value="">— choose a country —</option>
+      </select>
+      <div class="picker-preview" id="picker-preview" style="display:none">
+        <img id="picker-flag" src="" alt="" class="picker-flag-img">
+        <button class="btn-primary" id="theme-apply-country">Apply Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-section-label">Preset themes</div>
+  <div class="theme-grid" id="theme-grid"></div>
+</section>
+
+<!-- ── FLAG DESIGNER ─────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-flag-designer">
+  <div class="game-header">
+    <button class="btn-back" id="flag-back">← Back</button>
+    <h2 class="screen-title">Design Your Flag</h2>
+  </div>
+  <div class="flag-designer-body">
+
+    <div class="flag-preview-wrap">
+      <svg id="flag-svg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="flag-country-name-wrap">
+        <input type="text" id="flag-country-name" class="flag-name-input" placeholder="Name your country…" maxlength="32">
+      </div>
+    </div>
+
+    <div class="flag-controls">
+
+      <div class="fd-section">
+        <h3>Layout</h3>
+        <div class="layout-grid">
+          <button class="layout-btn selected" data-layout="h-stripe">
+            <svg viewBox="0 0 40 27"><rect width="40" height="9" fill="#c00"/><rect y="9" width="40" height="9" fill="#eee"/><rect y="18" width="40" height="9" fill="#009"/></svg>
+            <span>H-Stripes</span>
+          </button>
+          <button class="layout-btn" data-layout="v-stripe">
+            <svg viewBox="0 0 40 27"><rect width="13" height="27" fill="#009"/><rect x="13" width="14" height="27" fill="#eee"/><rect x="27" width="13" height="27" fill="#c00"/></svg>
+            <span>V-Stripes</span>
+          </button>
+          <button class="layout-btn" data-layout="triangle-left">
+            <svg viewBox="0 0 40 27"><rect width="40" height="13.5" fill="#eee"/><rect y="13.5" width="40" height="13.5" fill="#009"/><polygon points="0,0 16,13.5 0,27" fill="#c00"/></svg>
+            <span>Triangle</span>
+          </button>
+          <button class="layout-btn" data-layout="canton-solid">
+            <svg viewBox="0 0 40 27"><rect width="40" height="27" fill="#c00"/><rect width="16" height="12" fill="#00008B"/></svg>
+            <span>Canton</span>
+          </button>
+          <button class="layout-btn" data-layout="canton-stripe">
+            <svg viewBox="0 0 40 27"><rect width="40" height="9" fill="#c00"/><rect y="9" width="40" height="9" fill="#eee"/><rect y="18" width="40" height="9" fill="#c00"/><rect width="16" height="12" fill="#00008B"/></svg>
+            <span>C + Stripe</span>
+          </button>
+          <button class="layout-btn" data-layout="cross">
+            <svg viewBox="0 0 40 27"><rect width="40" height="27" fill="#c00"/><rect x="12.5" width="5" height="27" fill="#eee"/><rect y="10.8" width="40" height="5.4" fill="#eee"/></svg>
+            <span>Cross</span>
+          </button>
+          <button class="layout-btn" data-layout="diagonal">
+            <svg viewBox="0 0 40 27"><polygon points="0,0 40,0 0,27" fill="#009"/><polygon points="40,0 40,27 0,27" fill="#c00"/></svg>
+            <span>Diagonal</span>
+          </button>
+          <button class="layout-btn" data-layout="solid">
+            <svg viewBox="0 0 40 27"><rect width="40" height="27" fill="#c00"/></svg>
+            <span>Solid</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="fd-section" id="fd-stripe-count-section">
+        <h3>Stripe Count</h3>
+        <div class="radio-row">
+          <label class="radio-chip selected" data-val="2"><input type="radio" name="stripe-count" value="2" checked>2</label>
+          <label class="radio-chip" data-val="3"><input type="radio" name="stripe-count" value="3">3</label>
+        </div>
+      </div>
+
+      <div class="fd-section">
+        <h3>Colors</h3>
+        <div class="color-pickers" id="fd-color-pickers"></div>
+      </div>
+
+      <div class="fd-section">
+        <h3>Symbol</h3>
+        <div class="symbol-grid">
+          <button class="symbol-btn selected" data-symbol="none">None</button>
+          <button class="symbol-btn" data-symbol="star">★ Star</button>
+          <button class="symbol-btn" data-symbol="crescent">☽ Crescent</button>
+          <button class="symbol-btn" data-symbol="eclipse">◑ Eclipse</button>
+          <button class="symbol-btn" data-symbol="sun">☀ Sun</button>
+          <button class="symbol-btn" data-symbol="circle">● Circle</button>
+          <button class="symbol-btn" data-symbol="cross-sym">✚ Cross</button>
+          <button class="symbol-btn" data-symbol="stars-3">✦✦✦ Stars</button>
+        </div>
+      </div>
+
+      <div class="fd-section">
+        <h3>Symbol Color</h3>
+        <div class="color-pickers">
+          <label class="color-picker-label">
+            <input type="color" id="fd-symbol-color" value="#ffffff">
+            Symbol
+          </label>
+        </div>
+      </div>
+
+      <div class="fd-section">
+        <h3>Symbol Position</h3>
+        <div class="radio-row">
+          <label class="radio-chip selected" data-val="center"><input type="radio" name="sym-pos" value="center" checked>Center</label>
+          <label class="radio-chip" data-val="left"><input type="radio" name="sym-pos" value="left">Left</label>
+          <label class="radio-chip" data-val="canton"><input type="radio" name="sym-pos" value="canton">Canton</label>
+          <label class="radio-chip" data-val="corner"><input type="radio" name="sym-pos" value="corner">Corner</label>
+        </div>
+      </div>
+
+      <div class="fd-actions">
+        <button class="btn-primary" id="fd-save-btn">Save Flag &amp; Apply Theme</button>
+        <button class="btn-secondary" id="fd-reset-btn">Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCORES ─────────────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-scores">
+  <div class="game-header">
+    <button class="btn-back" id="scores-back">← Back</button>
+    <h2 class="screen-title">High Scores</h2>
+  </div>
+  <div class="scores-body" id="scores-body"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════════ SCRIPTS -->
+<!-- Free CDNs — no API key needed -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/shapes.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/flagDesigner.js"></script>
+<script src="js/modes/borders.js"></script>
+<script src="js/modes/pathfinder.js"></script>
+<script src="js/modes/gauntlet.js"></script>
+<script src="js/modes/classic.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
