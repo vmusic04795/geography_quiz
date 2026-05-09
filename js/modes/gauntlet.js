@@ -475,6 +475,25 @@ const GauntletMode = (() => {
     if (isUltimate && !localStorage.getItem('geoQuiz_hardModeBeaten')) {
       localStorage.setItem('geoQuiz_hardModeBeaten', JSON.stringify(entry));
     }
+    if (!isUltimate) refreshUltimateCard();
+  }
+
+  function refreshUltimateCard() {
+    const beaten = localStorage.getItem('geoQuiz_hardModeBeaten');
+    const card   = document.getElementById('ultimate-challenge-card');
+    const btn    = document.getElementById('ultimate-gauntlet-btn');
+    const icon   = document.getElementById('ultimate-icon');
+    const title  = document.getElementById('ultimate-title');
+    const desc   = document.getElementById('ultimate-desc');
+    if (!card || !btn) return;
+    if (beaten) {
+      card.classList.add('unlocked');
+      btn.disabled        = false;
+      btn.textContent     = 'Enter';
+      icon.textContent    = '⚔️';
+      title.style.color   = '';
+      if (desc) desc.textContent = 'All countries. Type every answer. Flags only — no shortcuts.';
+    }
   }
 
   function launchConfetti() {
@@ -564,23 +583,6 @@ const GauntletMode = (() => {
     });
 
     // Ultimate Gauntlet — show as unlocked if hard mode has been beaten
-    function refreshUltimateCard() {
-      const beaten = localStorage.getItem('geoQuiz_hardModeBeaten');
-      const card   = document.getElementById('ultimate-challenge-card');
-      const btn    = document.getElementById('ultimate-gauntlet-btn');
-      const icon   = document.getElementById('ultimate-icon');
-      const title  = document.getElementById('ultimate-title');
-      const desc   = document.getElementById('ultimate-desc');
-      if (!card || !btn) return;
-      if (beaten) {
-        card.classList.add('unlocked');
-        btn.disabled        = false;
-        btn.textContent     = 'Enter';
-        icon.textContent    = '⚔️';
-        title.style.color   = '';
-        if (desc) desc.textContent = 'All countries. Type every answer. Flags only — no shortcuts.';
-      }
-    }
     refreshUltimateCard();
 
     document.getElementById('ultimate-gauntlet-btn')?.addEventListener('click', () => {
