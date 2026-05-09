@@ -310,6 +310,7 @@ const FlagDesigner = (() => {
 
     // Save / Reset
     document.getElementById('fd-save-btn')?.addEventListener('click', save);
+    document.getElementById('fd-save-btn-top')?.addEventListener('click', save);
     document.getElementById('fd-reset-btn')?.addEventListener('click', reset);
 
     showStripeCount();

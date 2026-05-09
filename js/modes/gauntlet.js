@@ -2,7 +2,7 @@
 const GauntletMode = (() => {
   let settings = {
     mode:        'hard',
-    qTypes:      ['capital','country-from-capital','flag','shape','ocean'],
+    qTypes:      ['capital','country-from-capital','flag','shape'],
     qCount:      20,
     answerStyle: 'multiple-choice',
     regions:     ['Africa','Americas','Asia','Europe','Oceania'],
@@ -15,8 +15,8 @@ const GauntletMode = (() => {
     'capital':              'Capital City',
     'country-from-capital': 'Name the Country',
     'flag':                 'Flag Quiz',
+    'flag-identify':        'Flag Quiz',
     'shape':                'Country Shape',
-    'ocean':                'Borders Ocean/Sea',
   };
 
   function flagUrl(iso2) { return `https://flagcdn.com/w160/${iso2}.png`; }
@@ -27,7 +27,7 @@ const GauntletMode = (() => {
     settings.mode = mode;
 
     if (mode === 'hard') {
-      settings.qTypes = ['capital','country-from-capital','flag','shape','ocean'];
+      settings.qTypes = ['capital','country-from-capital','flag','shape'];
     } else {
       settings.qTypes = Array.from(document.querySelectorAll('input[name="q-type"]:checked'))
         .map(el => el.value);
@@ -43,7 +43,6 @@ const GauntletMode = (() => {
   // ── Question generation ───────────────────────────────────────────────────
   function poolForType(type) {
     let pool = COUNTRY_LIST.filter(c => settings.regions.includes(c.region));
-    if (type === 'ocean') pool = pool.filter(c => c.oceans.length > 0);
     if (type === 'shape') pool = pool.filter(c => ShapeRenderer.hasShape(c.code));
     return pool;
   }
@@ -112,22 +111,6 @@ const GauntletMode = (() => {
           country,
         };
       }
-      case 'ocean': {
-        const ocean = randomFrom(country.oceans);
-        const wrongCountries = COUNTRY_LIST.filter(c => c.code !== country.code && c.oceans.length > 0 && !c.oceans.includes(ocean));
-        const wrongOceans = distractors(country.code, ocean, () => {
-          const wc = randomFrom(wrongCountries);
-          return wc ? randomFrom(wc.oceans) : null;
-        });
-        const uniqueWrong = [...new Set(wrongOceans)].slice(0, 3);
-        return {
-          type, prompt: `Which ocean or sea does ${country.name} border?`,
-          answer: ocean,
-          choices: shuffle([ocean, ...uniqueWrong]),
-          media: null,
-          country,
-        };
-      }
       case 'flag-identify': {
         // Given country name → pick the correct flag from 4 images
         const wrong = distractors(country.code, country.iso2, c => c.iso2);
@@ -156,10 +139,17 @@ const GauntletMode = (() => {
   function generateQuestions() {
     const qs = [];
     const types = [...settings.qTypes];
+    const usedPerType = {};
     for (let i = 0; i < settings.qCount; i++) {
       const type = types[i % types.length];
-      const q = buildQuestion(type);
-      if (q) qs.push(q);
+      if (!usedPerType[type]) usedPerType[type] = new Set();
+      const fullPool  = poolForType(type);
+      const freshPool = fullPool.filter(c => !usedPerType[type].has(c.code));
+      const pool      = freshPool.length ? freshPool : (usedPerType[type] = new Set(), fullPool);
+      const country   = randomFrom(pool);
+      if (!country) continue;
+      const q = buildQuestion(type, country);
+      if (q) { usedPerType[type].add(country.code); qs.push(q); }
     }
     return shuffle(qs);
   }
@@ -183,8 +173,8 @@ const GauntletMode = (() => {
 
   function startHardMode() {
     settings.answerStyle = 'multiple-choice';
-    const questions = buildFullGauntlet(['capital','country-from-capital','flag','shape','ocean']);
-    session = { questions, index: 0, score: 0, streak: 0, answers: [], isHardMode: true };
+    const questions = buildFullGauntlet(['capital','country-from-capital','flag','shape']);
+    session = { questions, index: 0, score: 0, streak: 0, maxStreak: 0, answers: [], isHardMode: true };
 
     document.getElementById('gauntlet-q-total').textContent = questions.length;
     document.getElementById('gauntlet-end').style.display   = 'none';
@@ -199,8 +189,8 @@ const GauntletMode = (() => {
   function startUltimateGauntlet() {
     settings.answerStyle = 'type-in';
     // flag-identify replaces flag: shown country name → pick correct flag image
-    const questions = buildFullGauntlet(['capital','country-from-capital','flag-identify','shape','ocean']);
-    session = { questions, index: 0, score: 0, streak: 0, answers: [], isHardMode: true, isUltimate: true, fuzzyCount: 0 };
+    const questions = buildFullGauntlet(['capital','country-from-capital','flag-identify','shape']);
+    session = { questions, index: 0, score: 0, streak: 0, maxStreak: 0, answers: [], isHardMode: true, isUltimate: true, fuzzyCount: 0 };
 
     document.getElementById('gauntlet-q-total').textContent = questions.length;
     document.getElementById('gauntlet-end').style.display   = 'none';
@@ -219,10 +209,11 @@ const GauntletMode = (() => {
     const questions = generateQuestions();
     session = {
       questions,
-      index:   0,
-      score:   0,
-      streak:  0,
-      answers: [],
+      index:     0,
+      score:     0,
+      streak:    0,
+      maxStreak: 0,
+      answers:   [],
     };
 
     document.getElementById('gauntlet-q-total').textContent = questions.length;
@@ -378,6 +369,7 @@ const GauntletMode = (() => {
   function registerAnswer(correct, q, isFuzzy) {
     if (correct) {
       session.streak++;
+      session.maxStreak = Math.max(session.maxStreak, session.streak);
       const streakBonus = Math.min(session.streak - 1, 5) * 2;
       const base = isFuzzy ? 5 : 10;
       const pts  = base + streakBonus;
@@ -467,7 +459,7 @@ const GauntletMode = (() => {
     else msg += '🌍 There\'s a whole world to discover!';
 
     document.getElementById('gauntlet-final-msg').textContent = msg;
-    saveHighScore('gauntlet', session.score);
+    saveHighScore('gauntlet', session.score, session.maxStreak);
   }
 
   function saveGauntletBadge(correct, total, isUltimate) {
@@ -521,14 +513,7 @@ const GauntletMode = (() => {
     const q = session?.questions[session.index];
     if (!q) return;
 
-    let suggestions = [];
-    if (['capital','country-from-capital','flag','shape'].includes(q.type)) {
-      suggestions = autocomplete(val, 5).map(s => s.name);
-    } else if (q.type === 'ocean') {
-      const allOceans = [...new Set(COUNTRY_LIST.flatMap(c => c.oceans))];
-      const clean = val.trim().toLowerCase();
-      suggestions = allOceans.filter(o => o.toLowerCase().startsWith(clean)).slice(0, 5);
-    }
+    const suggestions = autocomplete(val, 5).map(s => s.name);
 
     const list = document.getElementById('gauntlet-autocomplete');
     list.innerHTML = '';
@@ -641,11 +626,11 @@ const GauntletMode = (() => {
 })();
 
 // ── High Score helpers ────────────────────────────────────────────────────
-function saveHighScore(mode, score) {
+function saveHighScore(mode, score, maxStreak) {
   const key = `geoQuiz_scores_${mode}`;
   let scores = [];
   try { scores = JSON.parse(localStorage.getItem(key) || '[]'); } catch {}
-  scores.push({ score, date: new Date().toLocaleDateString() });
+  scores.push({ score, date: new Date().toLocaleDateString(), streak: maxStreak || 0 });
   scores.sort((a, b) => b.score - a.score);
   scores = scores.slice(0, 10);
   localStorage.setItem(key, JSON.stringify(scores));
@@ -676,7 +661,8 @@ function loadHighScores() {
       scores.forEach((s, i) => {
         const row = document.createElement('div');
         row.className = 'score-row';
-        row.innerHTML = `<span class="score-rank">#${i + 1}</span><span>${s.date}</span><span class="score-val">${s.score} pts</span>`;
+        const streakHtml = s.streak ? `<span class="score-streak">🔥 ${s.streak}</span>` : '';
+        row.innerHTML = `<span class="score-rank">#${i + 1}</span><span>${s.date}</span><span class="score-val">${s.score} pts</span>${streakHtml}`;
         sec.appendChild(row);
       });
     }

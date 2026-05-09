@@ -70,6 +70,7 @@ const Game = (() => {
     document.getElementById('gauntlet-back').addEventListener('click',      () => showScreen('screen-home'));
     document.getElementById('gauntlet-setup-back').addEventListener('click',() => showScreen('screen-home'));
     document.getElementById('theme-back').addEventListener('click',         () => showScreen('screen-home'));
+    document.getElementById('theme-ok').addEventListener('click',           () => showScreen('screen-home'));
     document.getElementById('flag-back').addEventListener('click',          () => showScreen('screen-home'));
     document.getElementById('scores-back').addEventListener('click',        () => showScreen('screen-home'));
 

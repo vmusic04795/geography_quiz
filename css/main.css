@@ -298,6 +298,11 @@ img    { display: block; }
   gap: 16px;
   margin-bottom: 24px;
 }
+.btn-header-action {
+  margin-left: auto;
+  padding: 7px 20px;
+  font-size: 0.9rem;
+}
 .screen-title { font-size: 1.35rem; font-weight: 700; color: var(--text); }
 .game-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
 .stat-pill {
@@ -947,9 +952,10 @@ input[type=range] {
   color: var(--text);
 }
 .score-row:last-child { border-bottom: none; }
-.score-rank { font-weight: 800; color: var(--accent); width: 28px; }
-.score-val  { font-weight: 700; color: var(--text); }
-.no-scores  { color: var(--text-dim); font-size: 0.9rem; font-style: italic; }
+.score-rank   { font-weight: 800; color: var(--accent); width: 28px; }
+.score-val    { font-weight: 700; color: var(--text); }
+.score-streak { font-size: 0.82rem; color: var(--text-dim); white-space: nowrap; }
+.no-scores    { color: var(--text-dim); font-size: 0.9rem; font-style: italic; }
 
 /* ══════════════════════════════════════════════════════════════ TOAST */
 .toast {

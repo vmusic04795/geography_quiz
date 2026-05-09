@@ -86,11 +86,11 @@ const ClassicMode = (() => {
     return out;
   }
 
-  function buildQuestion(pair) {
+  function buildQuestion(pair, country) {
     const pool    = COUNTRY_LIST.filter(c => settings.regions.includes(c.region)
                       && (pair.given !== 'shape' || ShapeRenderer.hasShape(c.code)));
     if (!pool.length) return null;
-    const country = randomFrom(pool);
+    if (!country) country = randomFrom(pool);
 
     const givenVal = GIVEN_LABEL[pair.given](country);
     const promptFn = PROMPT[`${pair.given}→${pair.asked}`];
@@ -121,9 +121,19 @@ const ClassicMode = (() => {
   function generateQuestions() {
     const pairs = validPairs();
     const qs    = [];
+    const usedPerPair = {};
     for (let i = 0; i < settings.qCount; i++) {
       const pair = pairs[i % pairs.length];
-      const q    = buildQuestion(pair);
+      const key  = `${pair.given}→${pair.asked}`;
+      if (!usedPerPair[key]) usedPerPair[key] = new Set();
+      const fullPool  = COUNTRY_LIST.filter(c => settings.regions.includes(c.region)
+                          && (pair.given !== 'shape' || ShapeRenderer.hasShape(c.code)));
+      const freshPool = fullPool.filter(c => !usedPerPair[key].has(c.code));
+      const pool      = freshPool.length ? freshPool : (usedPerPair[key] = new Set(), fullPool);
+      if (!pool.length) continue;
+      const country   = randomFrom(pool);
+      usedPerPair[key].add(country.code);
+      const q = buildQuestion(pair, country);
       if (q) qs.push(q);
     }
     return shuffle(qs);
@@ -133,7 +143,7 @@ const ClassicMode = (() => {
   function start() {
     readSettings();
     const questions = generateQuestions();
-    session = { questions, index: 0, score: 0, streak: 0, answers: [] };
+    session = { questions, index: 0, score: 0, streak: 0, maxStreak: 0, answers: [] };
 
     document.getElementById('classic-q-total').textContent = questions.length;
     document.getElementById('classic-end').style.display   = 'none';
@@ -272,6 +282,7 @@ const ClassicMode = (() => {
   function registerAnswer(correct, q) {
     if (correct) {
       session.streak++;
+      session.maxStreak = Math.max(session.maxStreak, session.streak);
       const bonus = Math.min(session.streak - 1, 5) * 2;
       const pts   = 10 + bonus;
       session.score += pts;
@@ -324,7 +335,7 @@ const ClassicMode = (() => {
     else if (pct >= 60)   msg += '👍 Good effort!';
     else                  msg += '📚 Keep studying!';
     document.getElementById('classic-final-msg').textContent = msg;
-    saveHighScore('classic', session.score);
+    saveHighScore('classic', session.score, session.maxStreak);
   }
 
   // ── Autocomplete ──────────────────────────────────────────────────────────
