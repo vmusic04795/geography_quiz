@@ -89,6 +89,17 @@
       <button class="btn-primary" data-mode="gauntlet">Play</button>
     </div>
 
+    <div class="mode-card" data-mode="marathon">
+      <div class="mode-icon">🧠</div>
+      <h2>Marathon</h2>
+      <p>Name every country or capital from memory. No hints, no choices — just you and the world.</p>
+      <div class="mode-meta">
+        <span class="tag">Memory</span>
+        <span class="tag">Endurance</span>
+      </div>
+      <button class="btn-primary" data-mode="marathon">Play</button>
+    </div>
+
   </div>
 </section>
 
@@ -103,7 +114,7 @@
     <div class="setup-section">
       <h3>You Will Be Shown</h3>
       <div class="checkbox-group inline">
-        <label class="check-option"><input type="checkbox" name="classic-given" value="name" checked> <span>Country Name</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-given" value="name"> <span>Country Name</span></label>
         <label class="check-option"><input type="checkbox" name="classic-given" value="capital"> <span>Capital City</span></label>
         <label class="check-option"><input type="checkbox" name="classic-given" value="flag" checked> <span>Flag</span></label>
         <label class="check-option"><input type="checkbox" name="classic-given" value="shape"> <span>Shape</span></label>
@@ -114,7 +125,7 @@
       <h3>You Must Answer With</h3>
       <div class="checkbox-group inline">
         <label class="check-option"><input type="checkbox" name="classic-asked" value="name" checked> <span>Country Name</span></label>
-        <label class="check-option"><input type="checkbox" name="classic-asked" value="capital" checked> <span>Capital City</span></label>
+        <label class="check-option"><input type="checkbox" name="classic-asked" value="capital"> <span>Capital City</span></label>
         <label class="check-option"><input type="checkbox" name="classic-asked" value="flag"> <span>Flag (pick the flag)</span></label>
       </div>
     </div>
@@ -205,6 +216,27 @@
   </div>
 </section>
 
+<!-- ── BORDERS SETUP ──────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-borders-setup">
+  <div class="game-header">
+    <button class="btn-back" id="borders-setup-back">← Back</button>
+    <h2 class="screen-title">Borders Setup</h2>
+  </div>
+  <div class="setup-body">
+    <div class="setup-section">
+      <h3>Region Filter</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="borders-region" value="Africa" checked> <span>Africa</span></label>
+        <label class="check-option"><input type="checkbox" name="borders-region" value="Americas" checked> <span>Americas</span></label>
+        <label class="check-option"><input type="checkbox" name="borders-region" value="Asia" checked> <span>Asia</span></label>
+        <label class="check-option"><input type="checkbox" name="borders-region" value="Europe" checked> <span>Europe</span></label>
+        <label class="check-option"><input type="checkbox" name="borders-region" value="Oceania" checked> <span>Oceania</span></label>
+      </div>
+    </div>
+    <button class="btn-primary btn-large" id="borders-start-btn">Start Borders 🗺️</button>
+  </div>
+</section>
+
 <!-- ── BORDERS MODE ───────────────────────────────────────────────────────── -->
 <section class="screen" id="screen-borders">
   <div class="game-header">
@@ -243,6 +275,43 @@
       <div class="missed-chips" id="borders-missed-chips"></div>
       <button class="btn-primary" id="borders-next">Next Country →</button>
     </div>
+  </div>
+</section>
+
+<!-- ── PATHFINDER SETUP ───────────────────────────────────────────────────── -->
+<section class="screen" id="screen-pathfinder-setup">
+  <div class="game-header">
+    <button class="btn-back" id="pathfinder-setup-back">← Back</button>
+    <h2 class="screen-title">Pathfinder Setup</h2>
+  </div>
+  <div class="setup-body">
+    <div class="setup-section">
+      <h3>Difficulty</h3>
+      <div class="radio-group">
+        <label class="radio-option" data-value="easy">
+          <input type="radio" name="pathfinder-difficulty" value="easy">
+          <div class="radio-content">
+            <span class="radio-title">Easy</span>
+            <span class="radio-desc">Short routes — 2 to 4 border hops</span>
+          </div>
+        </label>
+        <label class="radio-option selected" data-value="normal">
+          <input type="radio" name="pathfinder-difficulty" value="normal" checked>
+          <div class="radio-content">
+            <span class="radio-title">Normal</span>
+            <span class="radio-desc">Medium routes — 3 to 7 hops</span>
+          </div>
+        </label>
+        <label class="radio-option" data-value="challenge">
+          <input type="radio" name="pathfinder-difficulty" value="challenge">
+          <div class="radio-content">
+            <span class="radio-title">Challenge</span>
+            <span class="radio-desc">Long routes — 5 to 10 hops</span>
+          </div>
+        </label>
+      </div>
+    </div>
+    <button class="btn-primary btn-large" id="pathfinder-start-btn">Start Pathfinder ✈️</button>
   </div>
 </section>
 
@@ -432,6 +501,102 @@
   </div>
 </section>
 
+<!-- ── MARATHON SETUP ─────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-marathon-setup">
+  <div class="game-header">
+    <button class="btn-back" id="marathon-setup-back">← Back</button>
+    <h2 class="screen-title">Marathon Setup</h2>
+  </div>
+  <div class="setup-body">
+
+    <div class="setup-section">
+      <h3>What to Name</h3>
+      <div class="radio-group">
+        <label class="radio-option selected" data-m-val="countries">
+          <input type="radio" name="marathon-mode" value="countries" checked>
+          <div class="radio-content">
+            <span class="radio-title">Country Names</span>
+            <span class="radio-desc">Name every country in the selected regions</span>
+          </div>
+        </label>
+        <label class="radio-option" data-m-val="capitals">
+          <input type="radio" name="marathon-mode" value="capitals">
+          <div class="radio-content">
+            <span class="radio-title">Capital Cities</span>
+            <span class="radio-desc">Name every capital in the selected regions</span>
+          </div>
+        </label>
+      </div>
+      <p class="setup-note">✏️ Spelling counts in both modes — close enough earns partial credit but resets your streak.</p>
+    </div>
+
+    <div class="setup-section">
+      <h3>Regions</h3>
+      <div class="checkbox-group inline">
+        <label class="check-option"><input type="checkbox" name="marathon-region" value="Africa" checked> <span>Africa</span></label>
+        <label class="check-option"><input type="checkbox" name="marathon-region" value="Americas" checked> <span>Americas</span></label>
+        <label class="check-option"><input type="checkbox" name="marathon-region" value="Asia" checked> <span>Asia</span></label>
+        <label class="check-option"><input type="checkbox" name="marathon-region" value="Europe" checked> <span>Europe</span></label>
+        <label class="check-option"><input type="checkbox" name="marathon-region" value="Oceania" checked> <span>Oceania</span></label>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-large" id="marathon-start-btn">Start Marathon 🧠</button>
+  </div>
+</section>
+
+<!-- ── MARATHON GAME ───────────────────────────────────────────────────────── -->
+<section class="screen" id="screen-marathon">
+
+  <!-- Active game -->
+  <div id="marathon-card">
+    <div class="game-header">
+      <button class="btn-back" id="marathon-back">← Back</button>
+      <div class="game-stats">
+        <div class="stat-pill">🎯 <span id="marathon-found">0</span>/<span id="marathon-total">0</span></div>
+        <div class="stat-pill">⚡ <span id="marathon-score">0</span> pts</div>
+        <div class="stat-pill">🔥 <span id="marathon-streak">0</span></div>
+        <div class="stat-pill marathon-mult-pill">✕<span id="marathon-mult">1</span></div>
+      </div>
+    </div>
+
+    <p class="marathon-prompt" id="marathon-prompt">Name every country in the selected regions:</p>
+
+    <div class="marathon-input-row">
+      <input type="text" id="marathon-input" class="marathon-input"
+             placeholder="Type a country name…"
+             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <button class="btn-primary marathon-submit-btn" id="marathon-submit">→</button>
+    </div>
+
+    <div class="marathon-encouragement" id="marathon-encouragement" style="display:none"></div>
+
+    <div class="marathon-progress" id="marathon-progress"></div>
+
+    <div class="marathon-found-list" id="marathon-found-list"></div>
+
+    <div class="marathon-give-up-row">
+      <button class="btn-secondary" id="marathon-give-up">Give Up &amp; Reveal</button>
+    </div>
+  </div>
+
+  <!-- End screen -->
+  <div class="marathon-end" id="marathon-end" style="display:none">
+    <h2 class="marathon-end-title" id="marathon-end-title">Marathon Over</h2>
+    <div class="marathon-end-score">
+      <div class="end-score-label">Final Score</div>
+      <div class="end-score-val" id="marathon-final-score">0</div>
+    </div>
+    <div class="marathon-end-stats" id="marathon-final-stats"></div>
+    <div class="marathon-missed" id="marathon-missed"></div>
+    <div class="end-actions">
+      <button class="btn-primary" id="marathon-play-again">Play Again</button>
+      <button class="btn-secondary" id="marathon-change-settings">Change Settings</button>
+    </div>
+  </div>
+
+</section>
+
 <!-- ── THEME PANEL ───────────────────────────────────────────────────────── -->
 <section class="screen" id="screen-theme">
   <div class="game-header">
@@ -593,6 +758,7 @@
 <script src="js/modes/pathfinder.js"></script>
 <script src="js/modes/gauntlet.js"></script>
 <script src="js/modes/classic.js"></script>
+<script src="js/modes/marathon.js"></script>
 <script src="js/game.js"></script>
 </body>
 </html>

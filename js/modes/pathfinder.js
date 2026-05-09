@@ -1,14 +1,26 @@
 /* ══════════════════════════════ PATHFINDER MODE ══════════════════════════ */
 const PathfinderMode = (() => {
+  const DIFFICULTY_HOPS = {
+    easy:      [2, 4],
+    normal:    [3, 7],
+    challenge: [5, 10],
+  };
+
+  let settings = { difficulty: 'normal' };
   let game = null;
   let score = 0;
   let hintsUsed = 0;
+
+  function readSettings() {
+    settings.difficulty = document.querySelector('input[name="pathfinder-difficulty"]:checked')?.value ?? 'normal';
+  }
 
   function flagUrl(iso2) { return `https://flagcdn.com/w160/${iso2}.png`; }
 
   // ── Start / New Journey ───────────────────────────────────────────────────
   function newJourney() {
-    const pair = randomPathPair(3, 9);
+    const [minH, maxH] = DIFFICULTY_HOPS[settings.difficulty] ?? [3, 7];
+    const pair = randomPathPair(minH, maxH);
     if (!pair) { showToast('Could not find a valid route — trying again', 'error'); newJourney(); return; }
 
     game = {
@@ -40,6 +52,7 @@ const PathfinderMode = (() => {
   }
 
   function start() {
+    readSettings();
     score = 0;
     newJourney();
   }
@@ -170,6 +183,15 @@ const PathfinderMode = (() => {
 
   // ── DOM wiring ────────────────────────────────────────────────────────────
   function init() {
+    document.querySelectorAll('input[name="pathfinder-difficulty"]').forEach(inp => {
+      inp.addEventListener('change', () => {
+        document.querySelectorAll('label[data-value]').forEach(l => {
+          if (['easy','normal','challenge'].includes(l.dataset.value))
+            l.classList.toggle('selected', l.dataset.value === inp.value);
+        });
+      });
+    });
+
     const input = document.getElementById('pathfinder-input');
     input.addEventListener('input', e => handleInput(e.target.value));
     input.addEventListener('keydown', e => {

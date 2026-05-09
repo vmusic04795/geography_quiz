@@ -1,9 +1,15 @@
 /* ═══════════════════════════════ BORDERS MODE ════════════════════════════ */
 const BordersMode = (() => {
+  let settings = { regions: ['Africa','Americas','Asia','Europe','Oceania'] };
   let current = null;   // { code, data }
   let found   = new Set();
   let score   = 0;
   let round   = 1;
+
+  function readSettings() {
+    settings.regions = Array.from(document.querySelectorAll('input[name="borders-region"]:checked')).map(e => e.value);
+    if (!settings.regions.length) settings.regions = ['Africa','Americas','Asia','Europe','Oceania'];
+  }
 
   function flagUrl(iso2) {
     return `https://flagcdn.com/w160/${iso2}.png`;
@@ -11,9 +17,9 @@ const BordersMode = (() => {
 
   // ── Start / New Round ─────────────────────────────────────────────────────
   function newRound() {
-    // Pick a random country that has at least 1 border
-    const pool = BORDERED_COUNTRIES;
-    const code = pool[Math.floor(Math.random() * pool.length)];
+    const pool = BORDERED_COUNTRIES.filter(c => settings.regions.includes(COUNTRIES[c].region));
+    const safePool = pool.length ? pool : BORDERED_COUNTRIES;
+    const code = safePool[Math.floor(Math.random() * safePool.length)];
     current = { code, data: COUNTRIES[code] };
     found = new Set();
 
@@ -43,6 +49,7 @@ const BordersMode = (() => {
   }
 
   function start() {
+    readSettings();
     score = 0;
     round = 1;
     newRound();

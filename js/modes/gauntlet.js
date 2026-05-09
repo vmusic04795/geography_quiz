@@ -623,8 +623,8 @@ function loadHighScores() {
   if (!body) return;
   body.innerHTML = '';
 
-  const MODE_LABELS = { classic: 'Classic', borders: 'Borders', pathfinder: 'Pathfinder', gauntlet: 'Gauntlet' };
-  ['classic','borders','pathfinder','gauntlet'].forEach(mode => {
+  const MODE_LABELS = { classic: 'Classic', borders: 'Borders', pathfinder: 'Pathfinder', gauntlet: 'Gauntlet', marathon: 'Marathon' };
+  ['classic','borders','pathfinder','gauntlet','marathon'].forEach(mode => {
     const sec = document.createElement('div');
     sec.className = 'score-section';
     const h3 = document.createElement('h3');

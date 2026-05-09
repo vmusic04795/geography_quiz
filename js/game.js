@@ -24,6 +24,7 @@ const Game = (() => {
     BordersMode.init();
     PathfinderMode.init();
     GauntletMode.init();
+    MarathonMode.init();
     FlagDesigner.init();
 
     // ── Header nav ────────────────────────────────────────────────────────
@@ -51,13 +52,13 @@ const Game = (() => {
         if (mode === 'classic') {
           showScreen('screen-classic-setup');
         } else if (mode === 'borders') {
-          showScreen('screen-borders');
-          BordersMode.start();
+          showScreen('screen-borders-setup');
         } else if (mode === 'pathfinder') {
-          showScreen('screen-pathfinder');
-          PathfinderMode.start();
+          showScreen('screen-pathfinder-setup');
         } else if (mode === 'gauntlet') {
           showScreen('screen-gauntlet-setup');
+        } else if (mode === 'marathon') {
+          showScreen('screen-marathon-setup');
         }
       });
     });
@@ -65,13 +66,17 @@ const Game = (() => {
     // ── Back buttons ──────────────────────────────────────────────────────
     document.getElementById('classic-back').addEventListener('click',        () => showScreen('screen-home'));
     document.getElementById('classic-setup-back').addEventListener('click', () => showScreen('screen-home'));
-    document.getElementById('borders-back').addEventListener('click',        () => showScreen('screen-home'));
-    document.getElementById('pathfinder-back').addEventListener('click',    () => showScreen('screen-home'));
+    document.getElementById('borders-setup-back').addEventListener('click', () => showScreen('screen-home'));
+    document.getElementById('borders-back').addEventListener('click',        () => showScreen('screen-borders-setup'));
+    document.getElementById('pathfinder-setup-back').addEventListener('click', () => showScreen('screen-home'));
+    document.getElementById('pathfinder-back').addEventListener('click',    () => showScreen('screen-pathfinder-setup'));
     document.getElementById('gauntlet-back').addEventListener('click',      () => showScreen('screen-home'));
     document.getElementById('gauntlet-setup-back').addEventListener('click',() => showScreen('screen-home'));
     document.getElementById('theme-back').addEventListener('click',         () => showScreen('screen-home'));
     document.getElementById('theme-ok').addEventListener('click',           () => showScreen('screen-home'));
     document.getElementById('flag-back').addEventListener('click',          () => showScreen('screen-home'));
+    document.getElementById('marathon-setup-back').addEventListener('click',() => showScreen('screen-home'));
+    document.getElementById('marathon-back').addEventListener('click',      () => showScreen('screen-home'));
     document.getElementById('scores-back').addEventListener('click',        () => showScreen('screen-home'));
 
     // ── Classic start ─────────────────────────────────────────────────────
@@ -81,9 +86,24 @@ const Game = (() => {
     });
 
     // ── Gauntlet start ────────────────────────────────────────────────────
+    document.getElementById('borders-start-btn').addEventListener('click', () => {
+      showScreen('screen-borders');
+      BordersMode.start();
+    });
+
+    document.getElementById('pathfinder-start-btn').addEventListener('click', () => {
+      showScreen('screen-pathfinder');
+      PathfinderMode.start();
+    });
+
     document.getElementById('gauntlet-start-btn').addEventListener('click', () => {
       showScreen('screen-gauntlet');
       GauntletMode.start();
+    });
+
+    document.getElementById('marathon-start-btn').addEventListener('click', () => {
+      showScreen('screen-marathon');
+      MarathonMode.start();
     });
 
     // ── Radio chip click-to-select ────────────────────────────────────────
