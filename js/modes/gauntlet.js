@@ -23,16 +23,9 @@ const GauntletMode = (() => {
 
   // ── Settings ──────────────────────────────────────────────────────────────
   function readSettings() {
-    const mode = document.querySelector('input[name="gauntlet-mode"]:checked')?.value ?? 'hard';
-    settings.mode = mode;
-
-    if (mode === 'hard') {
-      settings.qTypes = ['capital','country-from-capital','flag','shape'];
-    } else {
-      settings.qTypes = Array.from(document.querySelectorAll('input[name="q-type"]:checked'))
-        .map(el => el.value);
-      if (!settings.qTypes.length) settings.qTypes = ['capital'];
-    }
+    settings.qTypes = Array.from(document.querySelectorAll('input[name="q-type"]:checked'))
+      .map(el => el.value);
+    if (!settings.qTypes.length) settings.qTypes = ['capital'];
 
     settings.qCount      = parseInt(document.getElementById('gauntlet-q-count')?.value ?? 20);
     settings.answerStyle = document.querySelector('input[name="answer-style"]:checked')?.value ?? 'multiple-choice';
@@ -535,17 +528,6 @@ const GauntletMode = (() => {
 
   // ── DOM wiring ────────────────────────────────────────────────────────────
   function init() {
-    // Mode radio
-    document.querySelectorAll('input[name="gauntlet-mode"]').forEach(inp => {
-      inp.addEventListener('change', () => {
-        const custom = document.getElementById('gauntlet-custom-options');
-        if (custom) custom.style.display = inp.value === 'custom' ? '' : 'none';
-        document.querySelectorAll('label[data-value]').forEach(l => {
-          l.classList.toggle('selected', l.dataset.value === inp.value);
-        });
-      });
-    });
-
     // Slider
     const slider = document.getElementById('gauntlet-q-count');
     const label  = document.getElementById('gauntlet-q-count-label');
